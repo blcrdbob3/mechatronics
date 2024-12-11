@@ -32,6 +32,9 @@ int altuplidpulse;
 int altlolidpulse;
 
 int trimval;
+int randNumber;
+unsigned long previousMillis = 0;
+const long interval = 2000; // equal to 2000 milliseconds, which is equal to 2 seconds
 
 // Joystick button pin
 const int buttonPin = 2;  // Joystick button (SW) connected to pin 2
@@ -54,9 +57,14 @@ void setup() {
 
 void loop() {
   switchState = digitalRead(buttonPin);
-  // Read the joystick button (SW) and check if it's pressed
-  if (!switchState) {  // LOW means pressed (since the button might be wired to ground)
-    closeEyes();  // Call closeEyes function if button is pressed
+  unsigned long currentMillis = millis();
+  randNumber = random(1000);
+  if ((currentMillis - previousMillis >= interval) & (randNumber >= 990)) {
+    // save the last time you blinked the LED
+    previousMillis = currentMillis;
+    Serial.println("Previous Millis: " + String(previousMillis));
+    Serial.println("Current Millis: " + String(currentMillis));
+    blink();
   }
 
   // Read the person sensor data
@@ -114,8 +122,8 @@ void blink() {   // script to execute one blink
   
   // closes eyelids
   pwm.setPWM(2, 0, 500);
-  pwm.setPWM(3, 0, 240);
-  pwm.setPWM(4, 0, 240);
+  pwm.setPWM(3, 0, 160);
+  pwm.setPWM(4, 0, 160);
   pwm.setPWM(5, 0, 500);
 
   delay(80);
@@ -127,9 +135,3 @@ void blink() {   // script to execute one blink
   pwm.setPWM(5, 0, altlolidpulse);
 }
 
-// Function to simulate "closing the eyes" by moving the servo to a closed position
-void closeEyes() {
-  Serial.println("Joystick button pressed. Closing eyes...");
-  pwm.setPWM(0, 0, SERVOMIN);  // Move the servo to the minimum position (closed eyes)
-  Serial.println("Servo moved to closed position (pulse: " + String(SERVOMIN) + ")");
-}
