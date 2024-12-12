@@ -108,7 +108,7 @@ void loop() {
 
 void blink() {   // script to execute one blink
   
-  trimval = 550;   // this sets how wide the eyelids are positioned (higher number = wider eyes)
+  trimval = 700;   // this sets how wide the eyelids are positioned (higher number = wider eyes)
   trimval = map(trimval, 320, 580, -40, 40);
   uplidpulse = map(yval, 0, 1023, 400, 280);
   uplidpulse -= (trimval - 40);
